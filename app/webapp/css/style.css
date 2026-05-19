@@ -1,19 +1,37 @@
-/* ── Full-height chain ────────────────────────────────────────────────── */
+/* ── Page background ──────────────────────────────────────────────────── */
 .coachPage {
     height: 100vh;
+    background: linear-gradient(160deg, #1a3a5c 0%, #1e4f7a 50%, #1a5a8a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .coachPage .sapMPageSection {
     height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
+/* ── Chat card ────────────────────────────────────────────────────────── */
 .coachCard.sapFCard {
-    height: calc(100% - 1rem) !important;
-    width: calc(100% - 4rem) !important;
+    height: calc(100vh - 3rem) !important;
+    width: calc(50vw - 2rem) !important;
+    position: fixed !important;
+    top: 50% !important;
+    left: 1.5rem !important;
+    transform: translateY(-50%) !important;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    border-radius: 1.25rem !important;
+    border: 1px solid rgba(100, 180, 255, 0.18) !important;
+    box-shadow:
+        0 8px 40px rgba(0, 0, 0, 0.45),
+        0 1px 0 rgba(255,255,255,0.06) inset !important;
+    background: #0d1e30 !important;
 }
 
 .coachCard .sapFCardContent {
@@ -23,6 +41,7 @@
     flex-direction: column;
     overflow: hidden;
     padding: 0;
+    background: #0d1e30;
 }
 
 /* VBox fills card content as flex column */
@@ -30,83 +49,256 @@
     flex: 1 1 0;
     min-height: 0;
     overflow: hidden;
+    background: #0d1e30;
 }
 
-/* Chat area: native CSS scroll — no SAPUI5 ScrollContainer */
+/* ── Header toolbar ───────────────────────────────────────────────────── */
+.coachCard .sapMTB {
+    background: linear-gradient(90deg, #0a2540 0%, #0e3a60 100%) !important;
+    border-bottom: 1px solid rgba(100, 180, 255, 0.15) !important;
+    padding: 0 1rem !important;
+}
+
+.coachCard .sapMTB .sapMTitle {
+    color: #e8f4fd !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.02em !important;
+}
+
+.coachCard .sapMTB .sapUiIcon {
+    color: #4db8ff !important;
+}
+
+.coachCard .sapMTB .sapMBtnIcon {
+    color: #90caf9 !important;
+}
+
+.coachCard .sapMTB .sapMBtn:hover .sapMBtnIcon {
+    color: #ffffff !important;
+}
+
+.coachCard .sapMTB .sapMObjStatusText {
+    color: #90caf9 !important;
+    font-size: 0.75rem !important;
+}
+
+.coachCard .sapMTB .sapMObjStatusIcon {
+    color: #4caf50 !important;
+}
+
+/* ── Medical warning banner ───────────────────────────────────────────── */
+.medicalWarning {
+    background: transparent;
+    padding: 0.4rem 0.75rem 0 0.75rem;
+}
+
+.medicalWarning .sapMMsgStrip {
+    background-color: rgba(230, 126, 0, 0.12) !important;
+    border: 1px solid rgba(230, 126, 0, 0.35) !important;
+    border-left: 3px solid #e67e00 !important;
+    border-radius: 0.5rem !important;
+    color: #ffd591 !important;
+}
+
+.medicalWarning .sapMMsgStripText,
+.medicalWarning .sapMMsgStripIcon {
+    color: #ffd591 !important;
+}
+
+/* ── Chat area ────────────────────────────────────────────────────────── */
 .coachScroll.sapMFlexBox {
     flex: 1 1 0;
     min-height: 0;
     overflow-y: auto;
     overflow-x: hidden;
+    background: #0d1e30;
+    padding: 0.5rem 0;
 }
 
-/* ── Input area (reference pattern: absolute buttons over textarea) ───── */
+.coachScroll.sapMFlexBox::-webkit-scrollbar { width: 5px; }
+.coachScroll.sapMFlexBox::-webkit-scrollbar-track { background: transparent; }
+.coachScroll.sapMFlexBox::-webkit-scrollbar-thumb { background: rgba(100,180,255,0.2); border-radius: 3px; }
 
-/* Position relative so absolute buttons anchor here */
+/* ── Chat bubbles ─────────────────────────────────────────────────────── */
+.chat-item-ai {
+    border-radius: 0 1rem 1rem 1rem;
+    border: 1px solid rgba(100, 180, 255, 0.15);
+    background: linear-gradient(135deg, #0e2a45 0%, #112e4a 100%);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.chat-item-ai .sapMFT,
+.chat-item-ai .sapMFTContent,
+.chat-item-ai .sapMFTContent * {
+    color: #cce6ff !important;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.chat-item-user {
+    border-radius: 1rem 0 1rem 1rem;
+    border: 1px solid rgba(77, 184, 255, 0.3);
+    background: linear-gradient(135deg, #0a4f8a 0%, #0d6ebd 100%);
+    margin-left: auto;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.chat-item-user .sapMText {
+    color: #e8f4fd !important;
+    font-size: 0.9rem;
+}
+
+/* ── All MessageStrips inside card — force dark theme ─────────────────── */
+.coachCard .sapMMsgStrip {
+    background: #0a2540 !important;
+    border-color: rgba(77, 184, 255, 0.2) !important;
+}
+
+.coachCard .sapMMsgStrip .sapMMsgStripText,
+.coachCard .sapMMsgStrip .sapMMsgStripIcon,
+.coachCard .sapMMsgStrip .sapUiIcon,
+.coachCard .sapMMsgStrip * {
+    color: #1a1a1a !important;
+}
+
+/* ── Input area ───────────────────────────────────────────────────────── */
 #inputContainer.sapMHBox {
     position: relative;
     flex-shrink: 0;
+    background: #0a1929;
+    border-top: 1px solid rgba(100, 180, 255, 0.12);
+    padding-top: 0.5rem;
 }
 
-/* TextArea fills width but leaves 90px on the right for the two buttons */
 .cInput {
     position: relative;
     z-index: 1;
     width: 100%;
-    max-width: calc(100% - 90px);
+    max-width: calc(100% - 120px);
 }
 
-/* Unified border wrapping textarea + button area */
+.cInput .sapMTextAreaInner {
+    border: none !important;
+    background: #0e2a45 !important;
+    color: #e8f4fd !important;
+    border-radius: 0.625rem !important;
+}
+
 .cInput::before {
     content: "";
     position: absolute;
     top: -2px;
-    right: -90px;
+    right: -120px;
     bottom: -2px;
     left: -2px;
-    border-radius: 0.5rem;
-    border: 1px solid var(--sapField_BorderColor, #bfbfbf);
+    border-radius: 0.625rem;
+    border: 1px solid rgba(77, 184, 255, 0.25);
     pointer-events: none;
     z-index: 3;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .cInput:focus-within::before {
-    border-color: var(--sapField_Hover_BorderColor);
+    border-color: #4db8ff;
+    box-shadow: 0 0 0 3px rgba(77, 184, 255, 0.12);
 }
 
-/* Hide the textarea's own border — the ::before pseudo-element replaces it */
-.cInput .sapMTextAreaInner {
-    border: none !important;
+.sButton.sapMBtn { position: absolute; right: 0.9rem; top: 0.75rem; z-index: 4; }
+.sButton .sapMBtnIcon { color: #4db8ff !important; }
+.cButton.sapMBtn { position: absolute; right: 3.3rem; top: 0.75rem; z-index: 4; }
+.cButton .sapMBtnIcon { color: #4a7fa5 !important; }
+.pdfButton.sapMBtn { position: absolute; right: 5.7rem; top: 0.75rem; z-index: 4; }
+.pdfButton .sapMBtnIcon { color: #4a7fa5 !important; }
+.pdfButton:hover .sapMBtnIcon { color: #4db8ff !important; }
+
+/* ── Bottom disclaimer ────────────────────────────────────────────────── */
+.coachCard .sapUiMediumMarginBottom .sapMMsgStrip,
+.coachCard .sapUiMediumMarginBottom .sapMMsgStrip * {
+    background: #0a2540 !important;
+    border: 1px solid rgba(77, 184, 255, 0.15) !important;
+    border-radius: 0.5rem !important;
+    color: #90caf9 !important;
 }
 
-/* Send button: absolute, right edge of input */
-.sButton.sapMBtn {
-    position: absolute;
-    right: 0.9rem;
-    top: 0.75rem;
-    z-index: 4;
+/* ── All text white ───────────────────────────────────────────────────── */
+.coachCard,
+.coachCard .sapMText,
+.coachCard .sapMLabel,
+.coachCard .sapMTitle,
+.coachCard .sapMFT,
+.coachCard .sapMFTContent,
+.coachCard .sapMFTContent * {
+    color: #e8f4fd !important;
 }
 
-/* Clear button: absolute, just left of send button */
-.cButton.sapMBtn {
-    position: absolute;
-    right: 3.3rem;
-    top: 0.75rem;
-    z-index: 4;
+.coachCard .sapMTextArea,
+.coachCard .sapMTextAreaInner,
+.coachCard textarea {
+    color: #e8f4fd !important;
+    caret-color: #4db8ff !important;
 }
 
-/* ── Chat bubbles ─────────────────────────────────────────────────────── */
-.chat-item-ai {
-    border-radius: 0rem 1rem 1rem 1rem;
-    border-style: solid;
-    border-width: thin;
-    background-color: var(--sapContent_Illustrative_Color19);
+.coachCard .sapMLIBContent .sapMListNoDataText {
+    color: #4a7fa5 !important;
+    font-style: italic;
 }
 
-.chat-item-user {
-    border-radius: 1rem 0rem 1rem 1rem;
-    border-style: solid;
-    border-width: thin;
-    background-color: var(--sapContent_Illustrative_Color6);
-    margin-left: auto;
+/* ── Find nearby doctors button ───────────────────────────────────────── */
+.findDoctorsBtn.sapMBtn {
+    margin-top: 0.4rem;
+    border: 1px solid rgba(77, 184, 255, 0.3) !important;
+    border-radius: 2rem !important;
+    background: rgba(77, 184, 255, 0.07) !important;
+    height: auto !important;
 }
+
+.findDoctorsBtn .sapMBtnInner {
+    color: #4db8ff !important;
+    font-size: 0.8rem !important;
+    padding: 0.2rem 0.75rem !important;
+}
+
+.findDoctorsBtn:hover .sapMBtnInner {
+    color: #ffffff !important;
+    background: rgba(77, 184, 255, 0.18) !important;
+}
+
+/* ── Doctors dialog ───────────────────────────────────────────────────── */
+.doctorCard {
+    padding: 0.6rem 0.75rem;
+    border-bottom: 1px solid rgba(100, 180, 255, 0.1);
+    gap: 0.25rem;
+}
+
+.doctorCard:last-child {
+    border-bottom: none;
+}
+
+.doctorName {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #1a3a5c;
+}
+
+.doctorAddress {
+    font-size: 0.78rem;
+    color: #90caf9;
+    padding-left: 1.5rem;
+}
+
+.doctorMeta {
+    font-size: 0.75rem;
+    color: #4a7fa5;
+    align-self: center;
+}
+
+.doctorMapsBtn.sapMBtn {
+    font-size: 0.75rem !important;
+}
+
+.doctorMapsBtn .sapMBtnInner {
+    color: #4db8ff !important;
+    font-size: 0.75rem !important;
+    padding: 0.1rem 0.5rem !important;
+}
+

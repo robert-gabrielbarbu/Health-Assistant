@@ -9,5 +9,8 @@
   "devDependencies": {
     "@ui5/cli": "^3.11.1",
     "ui5-middleware-simpleproxy": "^3.7.0"
+  },
+  "dependencies": {
+    "pdfjs-dist": "^5.7.284"
   }
 }

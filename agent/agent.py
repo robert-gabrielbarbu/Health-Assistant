@@ -30,30 +30,27 @@ class AgentState(TypedDict):
 
 class CoachAgent:
     """
-    Strava workout coach agent.
-    Fetches real athlete data via Strava MCP tools before making any recommendation.
-    Never fabricates training data.
+    Personal health assistant agent.
+    Combines Strava workout data with Withings biometric data to provide
+    holistic health insights. Never fabricates data.
     """
 
     SYSTEM_INSTRUCTION = (
-        "You are an expert endurance sports coach with deep knowledge in running, "
-        "cycling, swimming, and triathlon training. You have access to the athlete's Strava data "
-        "and use it to craft science-based, personalised training plans.\n\n"
-        "Your approach:\n"
-        "1. Always fetch the athlete's recent activities and stats before making recommendations.\n"
-        "2. Analyse training load, intensity distribution, weekly volume, and recovery patterns.\n"
-        "3. Identify strengths, limiters, and injury-risk signals from the data.\n"
-        "4. Build weekly training plans that are progressive, periodised, and realistic.\n"
-        "5. Explain your reasoning in plain language so the athlete understands the 'why'.\n\n"
-        "When creating a workout plan:\n"
-        "- Structure it day-by-day for the coming week (Monday → Sunday).\n"
-        "- Specify workout type, duration/distance, target heart-rate zone or power zone, and key focus.\n"
-        "- Include at least one full rest day and one easy recovery session.\n"
-        "- Anchor intensity targets to the athlete's own data (average HR, pace, watts) where available.\n"
-        "- Close with 2-3 coaching tips tailored to what you observed in their recent training.\n\n"
-        "Always call the Strava tools to fetch real athlete data. Never fabricate or estimate training data.\n"
+        "You are a personal health assistant with two capabilities:\n\n"
+        "1. FITNESS & BIOMETRIC DATA: You have access to the user's Strava workout data "
+        "(activities, HR, pace, power) via tools. Always fetch real data before answering fitness questions.\n\n"
+        "2. MEDICAL DOCUMENT TRANSLATION: When the user provides a medical document or text, "
+        "you MUST translate it into plain language using exactly this structure:\n"
+        "   **What this document says** — 2-3 simple sentences, no jargon\n"
+        "   **What you should do next** — clear bullet point action steps\n"
+        "   **Recommendations** — practical advice bullets\n"
+        "   **Don't panic** — reassurance about what is normal and not an emergency\n"
+        "   Never refuse to translate a medical document. Always respond with the above structure.\n\n"
+        "When asked about training or workouts:\n"
+        "- Fetch Strava data first, then give a day-by-day plan with HR zone targets.\n\n"
+        "Never fabricate fitness data — always call the tools first.\n"
         f"Today's date is {datetime.now().strftime('%Y-%m-%d')}.\n\n"
-        "Tone: motivating, knowledgeable, direct. No filler phrases."
+        "Tone: clear, supportive, concise. No filler phrases. Never refuse a medical translation request."
     )
 
     SUPPORTED_CONTENT_TYPES = ["text", "text/plain"]
@@ -68,12 +65,12 @@ class CoachAgent:
     async def init_agent(self):
         global mcp_client
         if mcp_client is None:
-            logger.info("Initializing Strava MCP client...")
+            logger.info("Initializing Health MCP client...")
             mcp_client = await mcp_client_connector.get_mcp_client()
-            logger.info("Strava MCP client initialized")
+            logger.info("Health MCP client initialized")
 
         tools = await mcp_client.get_tools()
-        logger.info(f"Loaded {len(tools)} Strava MCP tools: {[t.name for t in tools]}")
+        logger.info(f"Loaded {len(tools)} Health MCP tools: {[t.name for t in tools]}")
 
         model_with_tools = self.model.bind_tools(tools)
         system_message = SystemMessage(content=self.SYSTEM_INSTRUCTION)
@@ -106,13 +103,13 @@ class CoachAgent:
                 yield {
                     "is_task_complete": False,
                     "require_user_input": False,
-                    "content": "Fetching Strava data...",
+                    "content": "Fetching health data...",
                 }
             elif isinstance(message, ToolMessage):
                 yield {
                     "is_task_complete": False,
                     "require_user_input": False,
-                    "content": "Analysing training data...",
+                    "content": "Analysing health data...",
                 }
 
         yield self._get_agent_response(config)
@@ -129,5 +126,5 @@ class CoachAgent:
         return {
             "is_task_complete": False,
             "require_user_input": True,
-            "content": "Unable to produce a training plan. Please provide more details.",
+            "content": "Unable to produce a response. Please provide more details.",
         }

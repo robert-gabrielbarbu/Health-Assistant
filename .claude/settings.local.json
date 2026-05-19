@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e ':*)",
+      "Bash(.venv/Scripts/python -c \"import pypdf; print\\('ok'\\)\")",
+      "Bash(.venv/Scripts/pip install:*)",
+      "Bash(python -m pip install pypdf)",
+      "Bash(tasklist /FI \"PID eq 25988\")",
+      "Bash(cmd:*)",
+      "Bash(tasklist)",
+      "Bash(wmic process:*)",
+      "Bash(curl -s http://localhost:8080/ -X POST -H \"Content-Type: application/json\" -d '{\"test\":1}')",
+      "Bash(curl -s http://localhost:8080/strava-stats)",
+      "Bash(curl -s http://localhost:8081/)",
+      "Bash(curl -s http://localhost:3000/)",
+      "Bash(netstat -ano)",
+      "Bash(curl:*)",
+      "Bash(.venv/Scripts/python.exe -c \"import sys; print\\(sys.version\\)\")",
+      "Bash(.venv/Scripts/python.exe -c \"import uvicorn; print\\('uvicorn ok'\\)\")",
+      "Bash(.venv/Scripts/python.exe -c \"import a2a; print\\('a2a ok'\\)\")",
+      "Bash(.venv/Scripts/python.exe -c ':*)",
+      "Bash(timeout 8 .venv/Scripts/python.exe main.py --port 8090)",
+      "Bash(.venv/Scripts/python.exe main.py --port 8080)",
+      "Bash(taskkill:*)"
+    ]
+  }
+}

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Strava Coach Agent</title>
+  <title>Health Assistant</title>
   <script id="sap-ui-bootstrap"
     src="resources/sap-ui-core.js"
     data-sap-ui-theme="sap_horizon"
@@ -13,6 +13,120 @@
     data-sap-ui-frameOptions="allow"
     data-sap-ui-oninit="module:sap/ui/core/ComponentSupport">
   </script>
+  <style>
+    #stravaPanel {
+      position: fixed;
+      top: 0; right: 0;
+      width: 50vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+      box-sizing: border-box;
+      gap: 1rem;
+      pointer-events: none;
+    }
+    .sp-title {
+      font-family: sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #e8f4fd;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .sp-card {
+      width: 100%;
+      max-width: 340px;
+      background: rgba(14, 42, 69, 0.7);
+      border: 1px solid rgba(100, 180, 255, 0.15);
+      border-radius: 1rem;
+      padding: 1rem 1.25rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      backdrop-filter: blur(10px);
+    }
+    .sp-label {
+      font-family: sans-serif;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #4a7fa5;
+      margin-bottom: 0.4rem;
+    }
+    .sp-main {
+      font-family: sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #e8f4fd;
+      margin-bottom: 0.5rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .sp-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.3rem;
+    }
+    .sp-pill {
+      background: rgba(77,184,255,0.1);
+      border: 1px solid rgba(77,184,255,0.22);
+      border-radius: 999px;
+      padding: 0.2rem 0.6rem;
+      font-family: sans-serif;
+      font-size: 0.75rem;
+      color: #90caf9;
+    }
+    .sp-suggest {
+      font-family: sans-serif;
+      font-size: 0.85rem;
+      color: #cce6ff;
+      line-height: 1.5;
+      margin-top: 0.25rem;
+    }
+    .sp-bar-wrap {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      height: 100px;
+      margin-top: 0.75rem;
+      padding-bottom: 0.25rem;
+    }
+    .sp-bar-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .sp-bar {
+      width: 32px;
+      border-radius: 4px 4px 0 0;
+      background: linear-gradient(180deg, #4db8ff 0%, #0a4f8a 100%);
+      min-height: 4px;
+    }
+    .sp-bar-val {
+      font-family: sans-serif;
+      font-size: 0.7rem;
+      color: #90caf9;
+    }
+    .sp-bar-lbl {
+      font-family: sans-serif;
+      font-size: 0.7rem;
+      color: #4a7fa5;
+    }
+    #stravaPanel.sp-loading .sp-card {
+      color: #4a7fa5;
+      font-family: sans-serif;
+      font-size: 0.85rem;
+      font-style: italic;
+    }
+  </style>
 </head>
 <body class="sapUiBody" id="content">
   <div data-sap-ui-component
@@ -21,5 +135,73 @@
     data-settings='{"id":"CoachAgent"}'
     style="height:100%">
   </div>
+
+  <div id="stravaPanel"><div class="sp-card" style="color:#4a7fa5;font-family:sans-serif;font-size:0.85rem;font-style:italic">Loading Strava stats...</div></div>
+
+  <script>
+    fetch("/api/agent/strava-stats")
+      .then(function(r){ return r.json(); })
+      .then(function(d){ renderStats(d); })
+      .catch(function(){ renderStats(null); });
+
+    function renderStats(d) {
+      var panel = document.getElementById("stravaPanel");
+      if (!d || d.error) {
+        panel.innerHTML = "<div class='sp-card' style='color:#4a7fa5;font-family:sans-serif;font-size:0.85rem;font-style:italic'>Strava offline — start the agent to load stats.</div>";
+        return;
+      }
+
+      var last = d.last_activity || {};
+      var wh = d.weekly_hours || {};
+      var weeks = Object.keys(wh).sort();
+      var maxH = Math.max.apply(null, weeks.map(function(w){ return wh[w]; }).concat([1]));
+
+      var sportIcon = { Run:"🏃", Ride:"🚴", Swim:"🏊", Walk:"🚶" };
+      var icon = sportIcon[last.sport_type] || "⚡";
+
+      var bars = weeks.map(function(w) {
+        var h = Math.round((wh[w] / maxH) * 60);
+        return "<div class='sp-bar-col'>" +
+          "<div class='sp-bar-val'>" + wh[w] + "h</div>" +
+          "<div class='sp-bar' style='height:" + Math.max(h,4) + "px'></div>" +
+          "<div class='sp-bar-lbl'>" + w + "</div>" +
+        "</div>";
+      }).join("");
+
+      panel.innerHTML =
+        "<div class='sp-title'>📊 Strava Stats</div>" +
+
+        "<div class='sp-card'>" +
+          "<div class='sp-label'>Last Workout</div>" +
+          "<div class='sp-main'>" + icon + " " + (last.name || "—") + "</div>" +
+          "<div class='sp-row'>" +
+            "<span class='sp-pill'>📍 " + (last.distance_km || 0) + " km</span>" +
+            "<span class='sp-pill'>⏱ " + (last.moving_time_min || 0) + " min</span>" +
+          "</div>" +
+          "<div class='sp-row'>" +
+            "<span class='sp-pill'>❤️ " + (last.average_heartrate || "—") + " bpm</span>" +
+            "<span class='sp-pill'>📅 " + (last.start_date_local || "").substring(0,10) + "</span>" +
+          "</div>" +
+        "</div>" +
+
+        "<div class='sp-card'>" +
+          "<div class='sp-label'>Weekly Training Hours (last 4 weeks)</div>" +
+          "<div class='sp-bar-wrap'>" + (bars || "<span style='color:#4a7fa5;font-size:0.8rem;font-family:sans-serif'>No data</span>") + "</div>" +
+        "</div>" +
+
+        "<div class='sp-card'>" +
+          "<div class='sp-label'>This Month</div>" +
+          "<div class='sp-row'>" +
+            "<span class='sp-pill'>🛣 " + d.monthly_km + " km</span>" +
+            "<span class='sp-pill'>💓 avg " + (d.avg_hr || "—") + " bpm</span>" +
+          "</div>" +
+        "</div>" +
+
+        "<div class='sp-card' style='border-color:rgba(77,184,255,0.25);background:linear-gradient(135deg,rgba(10,79,138,0.5),rgba(13,110,189,0.3))'>" +
+          "<div class='sp-label'>💡 Suggested Training</div>" +
+          "<div class='sp-suggest'>" + d.suggestion + "</div>" +
+        "</div>";
+    }
+  </script>
 </body>
 </html>

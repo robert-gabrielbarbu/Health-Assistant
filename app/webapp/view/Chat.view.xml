@@ -21,7 +21,7 @@
 
                         <!-- Header toolbar -->
                         <Toolbar height="4rem">
-                            <core:Icon size="1.5rem" src="sap-icon://ai"/>
+                            <core:Icon size="1.6rem" src="sap-icon://stethoscope" class="sapUiSmallMarginBegin"/>
                             <Title
                                 text="{i18n>appTitle}"
                                 titleStyle="H5"
@@ -30,16 +30,29 @@
                             <ObjectStatus
                                 text="{chat>/agentStatus}"
                                 state="{= ${chat>/agentStatus} === 'Online' ? 'Success' : 'Error' }"
-                                icon="sap-icon://connected"/>
+                                icon="sap-icon://status-positive"/>
                             <Button
                                 icon="sap-icon://create-session"
+                                type="Transparent"
                                 tooltip="{i18n>btnNewThread}"
                                 press=".onNewThread"/>
                             <Button
                                 icon="sap-icon://refresh"
+                                type="Transparent"
                                 tooltip="{i18n>btnLoadAgentCard}"
                                 press=".onLoadAgentCard"/>
                         </Toolbar>
+
+                        <!-- Medical disclaimer banner (always visible) -->
+                        <HBox justifyContent="Center" class="sapUiTinyMarginTop medicalWarning">
+                            <VBox width="98%">
+                                <MessageStrip
+                                    text="{i18n>medicalWarning}"
+                                    type="Warning"
+                                    showIcon="true"
+                                    showCloseButton="false"/>
+                            </VBox>
+                        </HBox>
 
                         <!-- Chat message list -->
                         <VBox
@@ -56,26 +69,45 @@
                                 noDataText="{i18n>noMessages}"
                                 items="{chat>/messages}">
                                 <CustomListItem type="Inactive">
-                                    <!-- Agent message (left-aligned) -->
+                                    <!-- Agent message (left-aligned with icon) -->
                                     <HBox
                                         visible="{= ${chat>role} === 'agent' }"
-                                        class="sapThemePageBG chat-item-ai sapUiTinyMarginBegin sapUiLargeMarginEnd sapUiSmallMarginTopBottom">
+                                        class="chat-item-ai sapUiTinyMarginBegin sapUiLargeMarginEnd sapUiSmallMarginTopBottom"
+                                        alignItems="Start">
+                                        <core:Icon
+                                            src="sap-icon://stethoscope"
+                                            size="1rem"
+                                            class="sapUiSmallMarginBegin sapUiSmallMarginTop"
+                                            color="#4db8ff"/>
                                         <VBox
-                                            class="sapUiSmallMarginBegin sapUiSmallMarginTopBottom sapThemeText sapUiSmallMarginEnd"
+                                            class="sapUiSmallMarginBegin sapUiSmallMarginTopBottom sapUiSmallMarginEnd"
                                             width="100%">
                                             <FormattedText
                                                 htmlText="{chat>contentHtml}"
                                                 class="sapUiTinyMarginBegin"/>
+                                            <Button
+                                                text="🗺 Find nearby doctors"
+                                                type="Transparent"
+                                                visible="{chat>hasMedicalContent}"
+                                                press=".onFindDoctors"
+                                                class="findDoctorsBtn sapUiTinyMarginTop"/>
                                         </VBox>
                                     </HBox>
 
-                                    <!-- User message (right-aligned) -->
+                                    <!-- User message (right-aligned with icon) -->
                                     <HBox
                                         visible="{= ${chat>role} === 'user' }"
-                                        class="chat-item-user sapUiTinyMarginEnd sapUiLargeMarginBegin sapUiSmallMarginTopBottom">
+                                        class="chat-item-user sapUiTinyMarginEnd sapUiLargeMarginBegin sapUiSmallMarginTopBottom"
+                                        alignItems="Center"
+                                        justifyContent="End">
                                         <VBox class="sapUiSmallMarginBegin sapUiSmallMarginEnd sapUiSmallMarginTopBottom">
                                             <Text text="{chat>content}" textAlign="End"/>
                                         </VBox>
+                                        <core:Icon
+                                            src="sap-icon://person-placeholder"
+                                            size="1rem"
+                                            class="sapUiSmallMarginEnd"
+                                            color="#90caf9"/>
                                     </HBox>
                                 </CustomListItem>
                             </List>
@@ -88,6 +120,9 @@
                             type="Information"
                             showIcon="true"
                             visible="{= !!${chat>/isLoading} }"/>
+
+                        <!-- Hidden file input for PDF upload -->
+                        <core:HTML id="pdfFileInput" content="&lt;input type='file' id='pdfUploadInput' accept='.pdf' style='display:none'/&gt;"/>
 
                         <!-- Input area -->
                         <HBox
@@ -108,6 +143,14 @@
                                 </TextArea>
                             </VBox>
                             <Button
+                                id="pdfButton"
+                                class="pdfButton"
+                                icon="sap-icon://pdf-attachment"
+                                type="Transparent"
+                                tooltip="{i18n>btnUploadPdf}"
+                                press=".onUploadPdf"
+                                enabled="{= !${chat>/isLoading} }"/>
+                            <Button
                                 id="clearButton"
                                 class="cButton"
                                 icon="sap-icon://decline"
@@ -117,7 +160,7 @@
                                 id="sendBtn"
                                 class="sButton"
                                 icon="sap-icon://paper-plane"
-                                type="Ghost"
+                                type="Transparent"
                                 press=".onSend"
                                 enabled="{= !${chat>/isLoading} }"/>
                         </HBox>
@@ -131,8 +174,7 @@
                                     showIcon="true"
                                     showCloseButton="true"
                                     class="sapUiMediumMarginBottom"
-                                    type="Warning"
-                                    customIcon="sap-icon://high-priority"/>
+                                    type="Information"/>
                             </VBox>
                         </HBox>
 

@@ -67,7 +67,7 @@ class CoachAgentExecutor(AgentExecutor):
                 else:
                     await updater.add_artifact(
                         [Part(root=TextPart(text=content))],
-                        name="training_plan",
+                        name="health_response",
                     )
                     await updater.complete()
                     break
