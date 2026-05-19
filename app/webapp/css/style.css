@@ -1,17 +1,72 @@
 /* ── Page background ──────────────────────────────────────────────────── */
+@keyframes heartbeat {
+    0%   { opacity: 0.18; transform: translate(-50%, -50%) scale(0.85); }
+    14%  { opacity: 0.55; transform: translate(-50%, -50%) scale(1.15); }
+    28%  { opacity: 0.25; transform: translate(-50%, -50%) scale(0.95); }
+    42%  { opacity: 0.60; transform: translate(-50%, -50%) scale(1.2);  }
+    70%  { opacity: 0.15; transform: translate(-50%, -50%) scale(0.8);  }
+    100% { opacity: 0.18; transform: translate(-50%, -50%) scale(0.85); }
+}
+
 .coachPage {
     height: 100vh;
-    background: linear-gradient(160deg, #1a3a5c 0%, #1e4f7a 50%, #1a5a8a 100%);
+    background: #1a3a5c;
+    position: relative;
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
 }
+
+/* Heartbeat glow orb */
+.coachPage::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80vw;
+    height: 80vw;
+    transform: translate(-50%, -50%) scale(0.85);
+    background: radial-gradient(ellipse at center,
+        rgba(70, 155, 210, 0.75) 0%,
+        rgba(55, 125, 175, 0.45) 30%,
+        rgba(35, 90, 130, 0.2)   60%,
+        transparent              80%
+    );
+    border-radius: 40% 60% 55% 45% / 50% 45% 55% 50%;
+    animation: heartbeat 1.5s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Secondary slower pulse for depth */
+.coachPage::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 60vw;
+    height: 60vw;
+    transform: translate(-50%, -50%) scale(0.85);
+    background: radial-gradient(ellipse at center,
+        rgba(110, 200, 255, 0.2) 0%,
+        rgba(55, 125, 175, 0.1)  40%,
+        transparent              70%
+    );
+    border-radius: 45% 55% 50% 50% / 55% 45% 55% 45%;
+    animation: heartbeat 1.5s ease-in-out infinite 0.75s;
+    pointer-events: none;
+    z-index: 0;
+}
+
 
 .coachPage .sapMPageSection {
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+    z-index: 1;
 }
 
 /* ── Chat card ────────────────────────────────────────────────────────── */
