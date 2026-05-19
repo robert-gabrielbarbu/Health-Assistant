@@ -1,0 +1,112 @@
+/* ── Full-height chain ────────────────────────────────────────────────── */
+.coachPage {
+    height: 100vh;
+}
+
+.coachPage .sapMPageSection {
+    height: 100%;
+}
+
+.coachCard.sapFCard {
+    height: calc(100% - 1rem) !important;
+    width: calc(100% - 4rem) !important;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.coachCard .sapFCardContent {
+    flex: 1 1 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 0;
+}
+
+/* VBox fills card content as flex column */
+.coachVBox.sapMFlexBox {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* Chat area: native CSS scroll — no SAPUI5 ScrollContainer */
+.coachScroll.sapMFlexBox {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* ── Input area (reference pattern: absolute buttons over textarea) ───── */
+
+/* Position relative so absolute buttons anchor here */
+#inputContainer.sapMHBox {
+    position: relative;
+    flex-shrink: 0;
+}
+
+/* TextArea fills width but leaves 90px on the right for the two buttons */
+.cInput {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: calc(100% - 90px);
+}
+
+/* Unified border wrapping textarea + button area */
+.cInput::before {
+    content: "";
+    position: absolute;
+    top: -2px;
+    right: -90px;
+    bottom: -2px;
+    left: -2px;
+    border-radius: 0.5rem;
+    border: 1px solid var(--sapField_BorderColor, #bfbfbf);
+    pointer-events: none;
+    z-index: 3;
+}
+
+.cInput:focus-within::before {
+    border-color: var(--sapField_Hover_BorderColor);
+}
+
+/* Hide the textarea's own border — the ::before pseudo-element replaces it */
+.cInput .sapMTextAreaInner {
+    border: none !important;
+}
+
+/* Send button: absolute, right edge of input */
+.sButton.sapMBtn {
+    position: absolute;
+    right: 0.9rem;
+    top: 0.75rem;
+    z-index: 4;
+}
+
+/* Clear button: absolute, just left of send button */
+.cButton.sapMBtn {
+    position: absolute;
+    right: 3.3rem;
+    top: 0.75rem;
+    z-index: 4;
+}
+
+/* ── Chat bubbles ─────────────────────────────────────────────────────── */
+.chat-item-ai {
+    border-radius: 0rem 1rem 1rem 1rem;
+    border-style: solid;
+    border-width: thin;
+    background-color: var(--sapContent_Illustrative_Color19);
+}
+
+.chat-item-user {
+    border-radius: 1rem 0rem 1rem 1rem;
+    border-style: solid;
+    border-width: thin;
+    background-color: var(--sapContent_Illustrative_Color6);
+    margin-left: auto;
+}

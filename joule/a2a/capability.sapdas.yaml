@@ -1,0 +1,13 @@
+schema_version: 3.27.0
+
+metadata:
+  display_name: strava_coach
+  namespace: com.sap.das.dev
+  name: strava_coach
+  version: 1.0.0
+  description: >-
+    Strava Workout Coach — analyses Strava training data and creates personalised weekly training plans.
+
+system_aliases:
+  AGENT_COACH:
+    destination: STRAVA_COACH_AGENT

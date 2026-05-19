@@ -1,0 +1,10 @@
+a2a-sdk[all]==0.2.9
+langchain-openai
+langgraph==0.6.10
+langchain-mcp-adapters==0.1.11
+mcp[cli]>=1.0.0
+httpx
+uvicorn
+click
+python-dotenv
+requests>=2.31.0

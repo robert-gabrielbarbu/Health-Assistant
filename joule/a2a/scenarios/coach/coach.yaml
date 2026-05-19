@@ -1,0 +1,18 @@
+description: >-
+  Answer questions about training, create weekly workout plans, analyse Strava
+  training load, and provide personalised coaching advice based on recent activities.
+
+target:
+  type: function
+  name: agent_coach
+  parameters:
+    - name: agent_context_id
+      value: $capability_context.agent_context_id
+
+response_context:
+  - description: Response from Strava Coach Agent
+    value: $target_result.agent_result
+
+capability_context:
+  - name: agent_context_id
+    value: $target_result.agent_context_id

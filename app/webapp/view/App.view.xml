@@ -1,0 +1,9 @@
+<mvc:View
+    controllerName="com.coach.agent.controller.App"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    displayBlock="true">
+    <Shell>
+        <App id="appNav"/>
+    </Shell>
+</mvc:View>

@@ -1,0 +1,13 @@
+{
+  "name": "coach-agent-ui",
+  "version": "1.0.0",
+  "description": "SAP Fiori UI for Strava Coach A2A Agent",
+  "scripts": {
+    "start": "ui5 serve --open index.html",
+    "build": "ui5 build --all"
+  },
+  "devDependencies": {
+    "@ui5/cli": "^3.11.1",
+    "ui5-middleware-simpleproxy": "^3.7.0"
+  }
+}

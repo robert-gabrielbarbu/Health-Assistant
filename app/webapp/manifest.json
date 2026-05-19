@@ -1,0 +1,79 @@
+{
+  "_version": "1.65.0",
+  "sap.app": {
+    "id": "com.coach.agent",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "applicationVersion": { "version": "1.0.0" }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "icons": {
+      "icon": "sap-icon://running"
+    },
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": false
+    }
+  },
+  "sap.ui5": {
+    "rootView": {
+      "viewName": "com.coach.agent.view.App",
+      "type": "XML",
+      "async": true,
+      "id": "app"
+    },
+    "dependencies": {
+      "minUI5Version": "1.120.0",
+      "libs": {
+        "sap.m":         { "lazy": false },
+        "sap.f":         { "lazy": false },
+        "sap.ui.layout": { "lazy": false },
+        "sap.ui.core":   { "lazy": false }
+      }
+    },
+    "resources": {
+      "css": [
+        { "uri": "css/style.css" }
+      ]
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "com.coach.agent.i18n.i18n"
+        }
+      }
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "viewType": "XML",
+        "viewPath": "com.coach.agent.view",
+        "controlId": "appNav",
+        "controlAggregation": "pages",
+        "async": true
+      },
+      "routes": [
+        {
+          "pattern": "",
+          "name": "chat",
+          "target": "chat"
+        }
+      ],
+      "targets": {
+        "chat": {
+          "viewName": "Chat",
+          "viewLevel": 1
+        }
+      }
+    }
+  }
+}
